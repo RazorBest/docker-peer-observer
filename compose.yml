@@ -1,0 +1,63 @@
+services:
+  nats:
+    build:
+      context: .
+      dockerfile: Dockerfile.nats
+    ports:
+      - 127.0.0.1:8222:8222
+      - 127.0.0.1:4222:4222
+    networks:
+      default:
+        aliases:
+          - metrics-host # Used by prometheus in prometheus.yml. It's here because metrics shares the same network with nats
+
+  rpc_extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile.rpc-extractor
+    volumes:
+      - ~/.bitcoin:/etc/bitcoin
+    environment:
+      - RPC_COOKIE_FILE=/etc/bitcoin/.cookie
+    depends_on:
+      - nats
+    network_mode: host
+
+  prometheus:
+    image: prom/prometheus:v3.5.1
+    volumes:
+      - ./tools/metrics/prometheus/:/etc/prometheus/
+      - prometheus_peer_observer_volume:/prometheus
+    command:
+      - "--storage.tsdb.retention.time=10d"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+      - "--web.enable-remote-write-receiver"
+    ports:
+      - 127.0.0.1:9092:9090
+
+  metrics:
+    build:
+      context: .
+      dockerfile: Dockerfile.metrics
+    depends_on:
+      - nats
+    network_mode: "service:nats"
+
+  grafana:
+    build:
+      context: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:?error}
+      - PROMETHEUS_URL1=${PROMETHEUS_URL1:-"http://localhost:9090"}
+      - PROMETHEUS_URL2=${PROMETHEUS_URL2:-"http://localhost:9091"}
+      - PROMETHEUS_DATASOURCE_TIME_INTERVAL=${PROMETHEUS_DATASOURCE_TIME_INTERVAL:-1s}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 127.0.0.1:3000:3000
+
+volumes:
+  prometheus_peer_observer_volume:
+  grafana_data:
