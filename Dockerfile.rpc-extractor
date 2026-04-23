@@ -1,0 +1,8 @@
+FROM debian:oldstable-slim
+
+ARG RPC_COOKIE_FILE=/etc/bitcoin/.cookie
+ENV RPC_COOKIE_FILE=$RPC_COOKIE_FILE
+
+COPY ./target/release/rpc-extractor .
+
+CMD ["sh", "-c", "./rpc-extractor --nats-address 127.0.0.1:4222 --rpc-cookie-file $RPC_COOKIE_FILE"]

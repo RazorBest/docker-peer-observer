@@ -1,0 +1,3 @@
+FROM nats:linux
+
+COPY nats-server.conf /nats-server.conf

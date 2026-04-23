@@ -1,0 +1,5 @@
+FROM debian:oldstable-slim
+
+COPY ./target/release/p2p-extractor .
+
+CMD ["./p2p-extractor", "--nats-address", "127.0.0.1:4222"]

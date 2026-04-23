@@ -1,0 +1,5 @@
+FROM debian:oldstable-slim
+
+COPY target/release/metrics .
+
+CMD ["./metrics", "--nats-address", "127.0.0.1:4222", "--metrics-address", "0.0.0.0:9090"]
