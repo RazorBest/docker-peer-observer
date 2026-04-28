@@ -1,5 +1,7 @@
 FROM debian:oldstable-slim
 
-COPY target/release/metrics .
+ARG BINARY_PATH=./target/release/metrics
+
+COPY ${BINARY_PATH} metrics
 
 CMD ["./metrics", "--nats-address", "127.0.0.1:4222", "--metrics-address", "0.0.0.0:9090"]

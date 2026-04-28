@@ -1,5 +1,7 @@
 FROM debian:oldstable-slim
 
-COPY ./target/release/p2p-extractor .
+ARG BINARY_PATH=./target/release/p2p-extractor
 
-CMD ["./p2p-extractor", "--nats-address", "127.0.0.1:4222"]
+COPY ${BINARY_PATH} .
+
+CMD ["p2p-extractor", "--nats-address", "127.0.0.1:4222"]

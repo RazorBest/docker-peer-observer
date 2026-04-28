@@ -1,5 +1,7 @@
 FROM debian:oldstable-slim
 
-COPY ./target/release/ebpf-extractor .
+ARG EBPF_BINARY_PATH=./target/release/ebpf-extractor
+
+COPY ${EBPF_BINARY_PATH} .
 
 CMD ["./ebpf-extractor", "--nats-address", "127.0.0.1:4222", "--bitcoind-path", "/host/home/btc/.local/bin/bitcoind", "--bitcoind-pid-file", "/host/home/btc/.bitcoin/bitcoind.pid"]
