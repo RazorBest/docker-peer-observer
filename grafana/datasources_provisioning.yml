@@ -1,0 +1,27 @@
+# Reference: https://grafana.com/docs/grafana/latest/datasources/prometheus/configure/
+apiVersion: 1
+
+prune: true
+
+datasources:
+  - name: Prometheus1
+    type: prometheus
+    access: proxy
+    url: $PROMETHEUS_URL1 # Example: http://localhost:9090
+    uid: P1809F7CD0C75ACF3
+    jsonData:
+      httpMethod: POST
+      cacheLevel: 'Low'
+      timeInterval: $PROMETHEUS_DATASOURCE_TIME_INTERVAL # Example: 15s
+      incrementalQueryOverlapWindow: 10m
+
+  - name: Prometheus2
+    type: prometheus
+    access: proxy
+    url: $PROMETHEUS_URL2 # Example: http://localhost:9090
+    uid: w5qDTuWkFp5m9ysGKtCnZQEa
+    jsonData:
+      httpMethod: POST
+      cacheLevel: 'Low'
+      timeInterval: $PROMETHEUS_DATASOURCE_TIME_INTERVAL # Example: 15s
+      incrementalQueryOverlapWindow: 10m
