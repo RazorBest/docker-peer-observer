@@ -39,6 +39,15 @@ services:
     ports:
       - 127.0.0.1:9092:9090
 
+  alertmanager:
+    image: prom/alertmanager:v0.32.1
+    volumes:
+      - ./alertmanager.yml:/alertmanager.yml
+    command:
+      - "--config.file=/alertmanager.yml"
+    ports:
+      - 127.0.0.1:10093:9093
+
   metrics:
     build:
       context: .
