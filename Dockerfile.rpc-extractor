@@ -1,10 +1,16 @@
 FROM debian:oldstable-slim
 
-ARG RPC_COOKIE_FILE=/etc/bitcoin/.cookie
-ENV RPC_COOKIE_FILE=$RPC_COOKIE_FILE
-
 ARG BINARY_PATH=./target/release/rpc-extractor
+ARG RPC_COOKIE_FILE=/etc/bitcoin/.cookie
+ARG NATS_ADDRESS=127.0.0.1:4222
+ARG RPC_ADDRESS=127.0.0.1:8332
+ARG PROMETHEUS_SERVE_ADDRESS=127.0.0.1:8284
+
+ENV RPC_COOKIE_FILE=$RPC_COOKIE_FILE
+ENV NATS_ADDRESS=$NATS_ADDRESS
+ENV RPC_ADDRESS=$RPC_ADDRESS
+ENV PROMETHEUS_SERVE_ADDRESS=$PROMETHEUS_SERVE_ADDRESS
 
 COPY ${BINARY_PATH} rpc-extractor
 
-CMD ["sh", "-c", "./rpc-extractor--nats-address 127.0.0.1:4222 --rpc-cookie-file $RPC_COOKIE_FILE"]
+CMD ["sh", "-c", "echo $RPC_ADDRESS && ./rpc-extractor --rpc-host $RPC_ADDRESS --nats-address $NATS_ADDRESS --rpc-cookie-file $RPC_COOKIE_FILE --prometheus-address $PROMETHEUS_SERVE_ADDRESS"]
