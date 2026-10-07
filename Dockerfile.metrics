@@ -1,7 +1,12 @@
 FROM debian:oldstable-slim
 
 ARG BINARY_PATH=./target/release/metrics
+ARG METRICS_PORT=9090
+ARG NATS_PORT=4222
+
+ENV METRICS_PORT=$METRICS_PORT
+ENV NATS_PORT=$NATS_PORT
 
 COPY ${BINARY_PATH} metrics
 
-CMD ["./metrics", "--nats-address", "127.0.0.1:4222", "--metrics-address", "0.0.0.0:9090"]
+CMD ["sh", "-c", "exec ./metrics --nats-address 127.0.0.1:$NATS_PORT --metrics-address 0.0.0.0:$METRICS_PORT"]
