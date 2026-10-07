@@ -1,0 +1,4 @@
+RPC_BINARY_PATH=./target/release/rpc-extractor
+METRICS_BINARY_PATH=./target/release/metrics
+GF_SECURITY_ADMIN_PASSWORD=admin
+PROMETHEUS_URL1=http://prometheus:9090
