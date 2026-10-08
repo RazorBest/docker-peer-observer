@@ -54,6 +54,8 @@ services:
       dockerfile: Dockerfile.metrics
       args:
         BINARY_PATH: ${METRICS_BINARY_PATH:-./target/release/metrics}
+        METRICS_PORT: 9090
+        NATS_PORT: 4222
     depends_on:
       - nats
     network_mode: "service:nats"
